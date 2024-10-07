@@ -1,9 +1,9 @@
 // app/competitions/page.tsx
 import Link from "next/link";
-import Image from "next/image";
-import placeholder from "../assets/ibrahim-asad-uTI1aexMBls-unsplash.jpg";
+import { getCompetitions } from "../actions";
 
 export default async function CompetitionsPage() {
+  const competitions = await getCompetitions();
   return (
     <div>
       <div>
@@ -25,14 +25,8 @@ export default async function CompetitionsPage() {
                 key={competition.id}
                 className="bg-white border shadow-md rounded-lg transition-transform transform overflow-hidden"
               >
-                <Image
-                  src={placeholder}
-                  width={500}
-                  height={200}
-                  alt="Competition Image"
-                />
                 <div className="p-6">
-                  <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                  <h2 className="text-2xl font-semibold text-gray-700 mb-6">
                     {competition.name}
                   </h2>
                   <p className="text-gray-500 mb-4">
