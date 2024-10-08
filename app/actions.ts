@@ -38,3 +38,14 @@ export async function getRounds(id: number) {
     await sql`SELECT * FROM rounds WHERE competition_id = ${id} ORDER BY date, time`;
   return response;
 }
+
+export async function getRoundID(id: number) {
+  if (!process.env.DATABASE_URL) {
+    throw new Error("DATABASE_URL is not defined");
+  }
+  const sql = neon(process.env.DATABASE_URL);
+  const roundData = await sql`SELECT * FROM rounds WHERE id = ${id}`;
+  const registrationsData =
+    await sql`SELECT * FROM registrations WHERE round_id = ${id}`;
+  return { roundData, registrationsData };
+}

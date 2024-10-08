@@ -25,14 +25,19 @@ export default async function CompetitionsPage() {
                 key={competition.id}
                 className="bg-white border shadow-md rounded-lg transition-transform transform overflow-hidden"
               >
-                <div className="p-6">
-                  <h2 className="text-2xl font-semibold text-gray-700 mb-6">
-                    {competition.name}
-                  </h2>
-                  <p className="text-gray-500 mb-4">
-                    {competition.description.slice(0, 100)}
-                  </p>
-                  <Link href={`/kilpailut/${competition.id}`}>
+                <div className="p-6 flex flex-col justify-between h-full">
+                  <div>
+                    <h2 className="text-2xl font-semibold text-gray-700 mb-6">
+                      {competition.name}
+                    </h2>
+                    <p className="text-gray-500 mb-4">
+                      {competition.description.slice(0, 100)}
+                    </p>
+                  </div>
+                  <Link
+                    href={`/kilpailut/${competition.id}`}
+                    className="mt-auto"
+                  >
                     <button className="rounded-full w-full border border-solid border-black/[.08] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44">
                       Katso tiedot
                     </button>
@@ -41,7 +46,7 @@ export default async function CompetitionsPage() {
               </div>
             ))
           ) : (
-            <p className="text-gray-600">Ei kilpailuja saatavilla.</p>
+            <p className="text-gray-600">Ei kilpailuja</p>
           )}
         </div>
       </div>
