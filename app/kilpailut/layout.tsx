@@ -2,7 +2,13 @@
 // src/app/competitions/layout.tsx
 import { useState } from "react";
 import Link from "next/link";
-import { SignedIn, SignedOut, UserButton, SignInButton } from "@clerk/nextjs";
+import {
+  SignedIn,
+  SignedOut,
+  UserButton,
+  SignInButton,
+  SignUpButton,
+} from "@clerk/nextjs";
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -32,27 +38,36 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-green-700">
+    <div className="flex flex-col bg-green-800">
       <header>
         <nav className="md:container mx-auto p-4 flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <div className="text-3xl font-mono font-bold text-white">
-              Ilmo-app
+              <Link href="/kilpailut">Ilmo-app</Link>
             </div>
           </div>
+          <div></div>
           <div className="hidden md:flex space-x-8 text-lg items-center">
             <Link
               href="/kilpailut"
-              className="text-white text-sm transition duration-300 sm:text-base text-w"
+              className="text-white font-semibold font-mono text-base"
             >
               Kilpailut
             </Link>
+            <div>
+              <p className="text-white">|</p>
+            </div>
             <SignedOut>
               <SignInButton>
-                <button className="rounded-full border border-solid border-transparent transition-colors text-gray-800 flex items-center justify-center bg-foreground text-background gap-2 bg-slate-100 hover:bg-slate-200 text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5">
-                  Kirjaudu sisään
+                <button className="font-semibold text-white font-mono text-base">
+                  Kirjaudu
                 </button>
               </SignInButton>
+              <SignUpButton>
+                <button className="font-semibold text-white font-mono text-base">
+                  Rekisteröidy
+                </button>
+              </SignUpButton>
             </SignedOut>
             <SignedIn>
               <UserButton>
@@ -97,19 +112,27 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </button>
         </nav>
         {isOpen && (
-          <div className="md:hidden bg-green-700 p-4 transition duration-300 flex gap-4 flex-col">
+          <div className="md:hidden bg-green-800 p-4 transition duration-300 flex gap-4 flex-col items-start border-b">
             <Link
               href="/kilpailut"
-              className="text-white text-sm transition duration-300 sm:text-base text-w"
+              className="text-white font-semibold font-mono text-base"
             >
               Kilpailut
             </Link>
+            <div>
+              <p className="text-white hidden md:box">|</p>
+            </div>
             <SignedOut>
               <SignInButton>
-                <button className="py-2 px-4 text-black bg-white rounded-lg">
-                  Kirjaudu sisään
+                <button className="font-semibold text-white font-mono text-base">
+                  Kirjaudu
                 </button>
               </SignInButton>
+              <SignUpButton>
+                <button className="font-semibold text-white font-mono text-base">
+                  Rekisteröidy
+                </button>
+              </SignUpButton>
             </SignedOut>
             <SignedIn>
               <UserButton>
@@ -125,7 +148,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           </div>
         )}
       </header>
-      <main className="flex-grow bg-white">{children}</main>
+      <main className="flex-grow bg-green-800">{children}</main>
     </div>
   );
 };

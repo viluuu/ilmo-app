@@ -1,17 +1,29 @@
 // app/competitions/page.tsx
 import Link from "next/link";
-import { getCompetitions } from "../actions";
+import { createClient } from "@/utils/supabase/server";
+import { currentUser } from "@clerk/nextjs/server";
 
 export default async function CompetitionsPage() {
-  const competitions = await getCompetitions();
+  const supabase = createClient();
+  const { data: competitions } = await supabase
+    .from("competitions")
+    .select("*");
+
+  const user = await currentUser();
+
   return (
     <div>
       <div>
         <div className="container mx-auto px-4 pb-2 mb-4">
-          <h1 className="text-3xl font-bold text-gray-800 pt-10 pb-4 mx-auto">
+          {user ? (
+            <p className="text-xl font-mono text-white mt-6">
+              Moi, {user?.fullName} 👋
+            </p>
+          ) : null}
+          <h1 className="text-5xl font-bold text-white mt-10 pb-4 mx-auto">
             Kilpailut
           </h1>
-          <p className="font-mono text-gray-500 ">
+          <p className="font-mono text-gray-200 ">
             Selaa käynnissä olevia ja tulevia kilpailuita. Ilmoittaudu mukaan
             helposti!
           </p>
@@ -19,7 +31,7 @@ export default async function CompetitionsPage() {
       </div>
       <div className="container mx-auto p-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {competitions.length > 0 ? (
+          {competitions != null && competitions.length > 0 ? (
             competitions.map((competition) => (
               <div
                 key={competition.id}
@@ -31,7 +43,7 @@ export default async function CompetitionsPage() {
                       {competition.name}
                     </h2>
                     <p className="text-gray-500 mb-4">
-                      {competition.description.slice(0, 100)}
+                      {competition.short_description.slice(0, 100)}
                     </p>
                   </div>
                   <Link

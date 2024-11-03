@@ -32,7 +32,7 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <div className="bg-green-700">{children}</div>
+          <div className="bg-green-800 min-h-svh">{children}</div>
         </body>
       </html>
     </ClerkProvider>

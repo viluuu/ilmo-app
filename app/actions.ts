@@ -49,3 +49,20 @@ export async function getRoundID(id: number) {
     await sql`SELECT * FROM registrations WHERE round_id = ${id}`;
   return { roundData, registrationsData };
 }
+
+export async function addRegistration(
+  roundId: number,
+  participantId: number,
+  status: string
+) {
+  if (!process.env.DATABASE_URL) {
+    throw new Error("DATABASE_URL is not defined");
+  }
+  const sql = neon(process.env.DATABASE_URL);
+  const response = await sql`
+    INSERT INTO registrations (round_id, user_id, status)
+    VALUES (${roundId}, ${participantId}, ${status})
+    RETURNING *;
+  `;
+  return response;
+}

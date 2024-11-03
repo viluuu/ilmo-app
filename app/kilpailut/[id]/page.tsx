@@ -1,4 +1,4 @@
-import { getRounds, getCompetitonID } from "@/app/actions";
+import { createClient } from "@/utils/supabase/server";
 import Link from "next/link";
 
 interface CompetitionDetailsPageProps {
@@ -9,12 +9,18 @@ interface CompetitionDetailsPageProps {
 
 async function CompetitionDetailsPage({ params }: CompetitionDetailsPageProps) {
   const id = Number(params.id);
-  const rounds = await getRounds(id);
-  const competition = (await getCompetitonID(id))[0];
+
+  const supabase = createClient();
+
+  const { data: competition } = await supabase
+    .from("competitions")
+    .select(
+      "id, name, short_description, start_date, end_date, rounds(id, date, start_time)"
+    )
+    .eq("id", id);
   // Muutetaan id numeroksi vertailua varten
 
   console.log(competition);
-  console.log(rounds);
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -39,29 +45,35 @@ async function CompetitionDetailsPage({ params }: CompetitionDetailsPageProps) {
       .padStart(2, "0")}`;
   };
 
-  return (
-    <div>
-      <h2 className="text-2xl font-bold">{competition.name}</h2>
-      <p className="mt-2">{competition.description}</p>
-      <p className="mt-2">{`Kilpailu alkaa: ${formatDate(
-        competition.start_date
-      )}`}</p>
-      <p className="mt-2">{`Kilpailu päättyy: ${formatDate(
-        competition.end_date
-      )}`}</p>
-      <h3 className="text-xl font-bold mt-6 mb-3">Tulevat erät</h3>
-      {rounds &&
-        rounds.map((round) => (
+  if (!competition) {
+    return <div>Kilpailua ei löytynyt</div>;
+  } else
+    return (
+      <div>
+        <h2 className="text-5xl text-white font-bold my-6">
+          {competition[0].name}
+        </h2>
+        <p className="mt-2 text-gray-200">{competition[0].short_description}</p>
+        <p className="mt-2 text-gray-200">{`Kilpailu alkaa: ${formatDate(
+          competition[0].start_date
+        )}`}</p>
+        <p className="mt-2 text-gray-200">{`Kilpailu päättyy: ${formatDate(
+          competition[0].end_date
+        )}`}</p>
+        <h3 className="text-2xl font-bold mt-6 mb-3 text-white">
+          Tulevat erät
+        </h3>
+        {competition[0].rounds.map((round) => (
           <div
             key={round.date}
-            className="p-4 mb-4 border rounded-lg shadow-lg flex flex-col relative bg-white"
+            className="p-4 mb-4 border rounded-lg shadow-lg flex flex-col relative "
           >
             <h4 className="text-lg font-semibold mb-2">{`${formatDate(
               round.date
             )}`}</h4>
-            <p className="mb-1">{`Klo. ${formatTime(round.time)}`}</p>
+            <p className="mb-1">{`Klo. ${formatTime(round.start_time)}`}</p>
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-              <Link href={`/kilpailut/${competition.id}/erat/${round.id}`}>
+              <Link href={`/kilpailut/${competition[0].id}/era/${round.id}`}>
                 <button className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] hover:border-transparent text-sm h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44">
                   Avaa →
                 </button>
@@ -69,9 +81,8 @@ async function CompetitionDetailsPage({ params }: CompetitionDetailsPageProps) {
             </div>
           </div>
         ))}
-      <h3 className="text-xl font-bold mt-6">Menneet erät</h3>
-    </div>
-  );
+      </div>
+    );
 }
 
 export default CompetitionDetailsPage;
