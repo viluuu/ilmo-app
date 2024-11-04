@@ -1,9 +1,11 @@
+// app/competitions/[id]/page.tsx
 import { createClient } from "@/utils/supabase/server";
-import Link from "next/link";
+
+import RoundDetails from "@/app/components/RoundDetails";
 
 interface CompetitionDetailsPageProps {
   params: {
-    id: string; // id tulee merkkijonona
+    id: string;
   };
 }
 
@@ -15,19 +17,17 @@ async function CompetitionDetailsPage({ params }: CompetitionDetailsPageProps) {
   const { data: competition } = await supabase
     .from("competitions")
     .select(
-      "id, name, short_description, start_date, end_date, rounds(id, date, start_time)"
+      "id, name, short_description, start_date, end_date, rounds(id, date, start_time, max_participants, registrations(*))"
     )
-    .eq("id", id);
-  // Muutetaan id numeroksi vertailua varten
-
-  console.log(competition);
+    .eq("id", id)
+    .single();
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) {
       return "Invalid date";
     }
-    const formattedDate = new Intl.DateTimeFormat("fi-FI", {
+    const formattedDate = Intl.DateTimeFormat("fi-FI", {
       weekday: "long",
       day: "numeric",
       month: "long",
@@ -37,52 +37,58 @@ async function CompetitionDetailsPage({ params }: CompetitionDetailsPageProps) {
 
   const formatTime = (timeString: string) => {
     const [hours, minutes] = timeString.split(":").map(Number);
-    if (isNaN(hours) || isNaN(minutes)) {
-      return "Invalid time";
-    }
-    return `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}`;
+    return !isNaN(hours) && !isNaN(minutes)
+      ? `${hours.toString().padStart(2, "0")}:${minutes
+          .toString()
+          .padStart(2, "0")}`
+      : "Invalid time";
   };
 
   if (!competition) {
     return <div>Kilpailua ei löytynyt</div>;
-  } else
-    return (
-      <div>
-        <h2 className="text-5xl text-white font-bold my-6">
-          {competition[0].name}
-        </h2>
-        <p className="mt-2 text-gray-200">{competition[0].short_description}</p>
-        <p className="mt-2 text-gray-200">{`Kilpailu alkaa: ${formatDate(
-          competition[0].start_date
-        )}`}</p>
-        <p className="mt-2 text-gray-200">{`Kilpailu päättyy: ${formatDate(
-          competition[0].end_date
-        )}`}</p>
-        <h3 className="text-2xl font-bold mt-6 mb-3 text-white">
-          Tulevat erät
-        </h3>
-        {competition[0].rounds.map((round) => (
-          <div
-            key={round.date}
-            className="p-4 mb-4 border rounded-lg shadow-lg flex flex-col relative "
-          >
-            <h4 className="text-lg font-semibold mb-2">{`${formatDate(
-              round.date
-            )}`}</h4>
-            <p className="mb-1">{`Klo. ${formatTime(round.start_time)}`}</p>
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-              <Link href={`/kilpailut/${competition[0].id}/era/${round.id}`}>
-                <button className="rounded-full border border-solid border-black/[.08] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] hover:border-transparent text-sm h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44">
-                  Avaa →
-                </button>
-              </Link>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
+  }
+
+  // Format dates and times in rounds data
+  const formattedRounds = competition.rounds.map((round) => ({
+    ...round,
+    formattedDate: formatDate(round.date),
+    formattedTime: formatTime(round.start_time),
+  }));
+
+  return (
+    <div className="py-2 md:py-10">
+      <header className="text-center mb-14">
+        <h1 className="text-5xl sm:text-6xl font-bold text-white mt-8 pb-6">
+          {competition.name}
+        </h1>
+        <p className="font-mono text-gray-300">
+          {competition.short_description}
+        </p>
+        <p className="mt-8 font-mono text-white">
+          Kilpailu alkaa: {formatDate(competition.start_date)}
+        </p>
+        <p className="mt-2 font-mono text-white">
+          Kilpailu päättyy: {formatDate(competition.end_date)}
+        </p>
+      </header>
+
+      <h3 className="text-3xl font-bold mt-6 mb-6 text-white">Tulevat erät</h3>
+
+      {formattedRounds.length === 0 ? (
+        <div>Ei eriä</div>
+      ) : (
+        <ul className="bg-slate-100 rounded-lg px-6 divide-y divide-gray-300">
+          {formattedRounds.map((round) => (
+            <RoundDetails
+              key={round.id}
+              round={round}
+              competitionId={competition.id}
+            />
+          ))}
+        </ul>
+      )}
+    </div>
+  );
 }
 
 export default CompetitionDetailsPage;
