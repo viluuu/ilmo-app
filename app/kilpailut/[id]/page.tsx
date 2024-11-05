@@ -83,6 +83,7 @@ async function CompetitionDetailsPage({ params }: CompetitionDetailsPageProps) {
               key={round.id}
               round={round}
               competitionId={competition.id}
+              competitionName={competition.name}
             />
           ))}
         </ul>
