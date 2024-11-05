@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-16 row-start-2 items-center sm:items-start">
         <h1 className="font-mono font-bold text-white text-5xl">Ilmo-app</h1>
         <ol className="list-inside list-decimal text-sm text-center text-slate-200 sm:text-left font-[family-name:var(--font-geist-mono)]">
@@ -15,19 +15,26 @@ export default function Home() {
           </li>
           <li>Siirry sovellukseen alla olevalla painikkeella.</li>
         </ol>
-
-        <div className="flex gap-8 items-center flex-col sm:flex-row">
+        <div>
+          <div className="flex gap-8 items-center flex-row sm:flex-row">
+            <Link
+              className="rounded-full font-mono border border-solid text-gray-700 border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 bg-white hover:bg-slate-200 text-sm sm:text-base h-10 sm:h-12 px-5 py-6 sm:px-5"
+              href="/kirjaudu"
+            >
+              Kirjaudu sisään
+            </Link>
+            <Link
+              href="/rekisteroidy"
+              className="rounded-full border border-solid text-white font-mono border-transparent transition-colors flex items-center justify-center border-white text-background gap-2 text-sm sm:text-base h-10 sm:h-12 px-5 py-6 sm:px-5 "
+            >
+              Rekisteröidy
+            </Link>
+          </div>
           <Link
-            className="rounded-full font-mono border border-solid text-gray-700 border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 bg-white hover:bg-slate-200 text-sm sm:text-base h-10 sm:h-12 px-7 py-6 sm:px-5"
             href="/kilpailut"
+            className="text-white font-mono mt-8 transition-colors flex items-center justify-center text-sm sm:text-base h-10 sm:h-12 sm:px-5 "
           >
-            Siirry sovellukseen
-          </Link>
-          <Link
-            href="/rekisteroidy"
-            className="rounded-full border border-solid text-white font-mono border-transparent transition-colors flex items-center justify-center text-background gap-2 text-sm sm:text-base h-10 sm:h-12 px-7 py-6 sm:px-5 "
-          >
-            Rekisteröidy
+            Jatka kirjautumatta
           </Link>
         </div>
       </main>

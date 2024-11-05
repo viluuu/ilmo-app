@@ -60,7 +60,7 @@ export default function ConfirmationModal({
         <div className="flex justify-end space-x-4">
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded bg-gray-200 text-gray-700 hover:bg-gray-300 font-mono"
+            className="mt-5 rounded-full border border-gray-300 text-gray-800 transition-transform duration-300 py-2 px-4 hover:bg-gray-100 hover:border-green-800"
           >
             Peruuta
           </button>
@@ -69,7 +69,7 @@ export default function ConfirmationModal({
               onConfirm();
               onClose();
             }}
-            className="px-4 py-2 rounded bg-green-800 text-white hover:bg-green-700 font-mono"
+            className="mt-5 rounded-full border bg-green-800 text-white border-green-800 text-gray-800 transition-transform duration-300 py-2 px-4 hover:bg-green-700 hover:border-green-700"
           >
             Vahvista
           </button>

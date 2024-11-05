@@ -57,9 +57,8 @@ export default async function CompetitionsPage() {
                   <Image
                     src={placeholderimage}
                     alt="Tournament"
-                    layout="fill"
-                    objectFit="cover"
                     className="h-full"
+                    style={{ objectFit: "cover" }}
                   />
                   <div className="absolute top-2 left-2 bg-black/50 text-white px-2 py-1 text-xs rounded">
                     Käynnissä

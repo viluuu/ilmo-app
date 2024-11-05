@@ -4,6 +4,7 @@
 import { useUser } from "@clerk/nextjs";
 import { useState, useRef, useEffect } from "react";
 import ConfirmationModal from "./ConfirmationModal";
+import Link from "next/link";
 
 interface RoundDetailsProps {
   round: {
@@ -93,13 +94,19 @@ export default function RoundDetails({
           ) : (
             <p className="text-gray-500">Ei rekisteröityneitä pelaajia.</p>
           )}
-          {isSignedIn && (
+          {isSignedIn ? (
             <button
               onClick={handleOpenModal}
               className="mt-5 rounded-full border border-gray-300 text-gray-800 transition-transform duration-300 py-2 px-4 hover:bg-gray-100 hover:border-green-800"
             >
               Ilmoittaudu
             </button>
+          ) : (
+            <Link href="/kirjaudu">
+              <button className="mt-5 rounded-full border border-gray-300 text-gray-800 transition-transform duration-300 py-2 px-4 hover:bg-gray-100 hover:border-green-800">
+                Kirjaudu sisään ilmoittautuaksesi
+              </button>
+            </Link>
           )}
         </ul>
       </div>
