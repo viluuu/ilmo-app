@@ -57,19 +57,21 @@ async function CompetitionDetailsPage({ params }: CompetitionDetailsPageProps) {
 
   return (
     <div className="py-2 md:py-10">
-      <header className="text-center mb-14">
-        <h1 className="text-5xl sm:text-6xl font-bold text-white mt-8 pb-6">
-          {competition.name}
-        </h1>
-        <p className="font-mono text-gray-300">
-          {competition.short_description}
-        </p>
-        <p className="mt-8 font-mono text-white">
-          Kilpailu alkaa: {formatDate(competition.start_date)}
-        </p>
-        <p className="mt-2 font-mono text-white">
-          Kilpailu päättyy: {formatDate(competition.end_date)}
-        </p>
+      <header className="flex flex-col md:flex-row text-start mb-14">
+        <div className="md:w-2/3">
+          <h1 className="text-5xl sm:text-6xl font-bold text-white mt-8 pb-6">
+            {competition.name}
+          </h1>
+          <p className="font-mono text-gray-300">
+            {competition.short_description}
+          </p>
+          <p className="mt-8 font-mono text-white">
+            Kilpailu alkaa: {formatDate(competition.start_date)}
+          </p>
+          <p className="mt-2 font-mono text-white">
+            Kilpailu päättyy: {formatDate(competition.end_date)}
+          </p>
+        </div>
       </header>
 
       <h3 className="text-3xl font-bold mt-6 mb-6 text-white">Tulevat erät</h3>

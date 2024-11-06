@@ -3,7 +3,7 @@ import Link from "next/link";
 import { createClient } from "@/utils/supabase/server";
 import { currentUser } from "@clerk/nextjs/server";
 import Image from "next/image";
-import placeholderimage from "/app/assets/ibrahim-asad-uTI1aexMBls-unsplash.jpg";
+import placeholderimage from "/app/assets/IMG_4091.jpg";
 
 export default async function CompetitionsPage() {
   const supabase = createClient();
@@ -27,9 +27,9 @@ export default async function CompetitionsPage() {
   };
 
   return (
-    <div className="sm:py-8 py-4">
+    <div className="sm:py-4 py-4">
       <div className="container mx-auto px-4">
-        <header className="text-center mb-14">
+        <header className="text-start mb-14">
           {user ? (
             <p className="text-xl font-mono text-gray-200 mt-6">
               Moi, {user?.fullName} 👋
@@ -44,53 +44,55 @@ export default async function CompetitionsPage() {
           </p>
         </header>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {competitions != null && competitions.length > 0 ? (
             competitions.map((competition) => (
               <Link
                 key={competition.id}
                 href={`/kilpailut/${competition.id}`}
-                className="flex bg-slate-100 rounded-lg overflow-hidden transition hover:shadow-xl transform"
+                className="flex flex-col bg-white rounded-lg overflow-hidden shadow hover:shadow-xl transition transform"
               >
-                {/* Kuva vasemmalla */}
-                <div className="relative w-1/3">
+                {/* Kuva */}
+                <div className="relative">
                   <Image
-                    src={placeholderimage}
-                    alt="Tournament"
-                    className="h-full"
-                    style={{ objectFit: "cover" }}
+                    src={competition.image || placeholderimage}
+                    alt={competition.name}
+                    className="w-full h-64 object-cover"
                   />
-                  <div className="absolute top-2 left-2 bg-black/50 text-white px-2 py-1 text-xs rounded">
-                    Käynnissä
+                  <div className="absolute top-2 left-2 bg-gray-600 text-white text-xs px-2 py-1 rounded">
+                    {competition.status || "Käynnissä"}
                   </div>
                 </div>
 
-                {/* Tekstit oikealla */}
-                <div className="w-2/3 p-6 md:py-8 flex flex-col justify-between">
-                  <div>
-                    <h2 className="text-2xl md:text-3xl font-semibold text-green-800">
-                      {competition.name}
-                    </h2>
-                    <p className="text-sm text-gray-600 mb-2">
-                      {competition.location}
-                    </p>
-                    <div className="flex items-center space-x-2 font-mono text-gray-500">
-                      <span>{formatDate(competition.start_date)}</span>
-                      <span>-</span>
-                      <span>{formatDate(competition.end_date)}</span>
-                    </div>
-                  </div>
+                {/* Tekstit ja tiedot */}
+                <div className="p-4 flex flex-col justify-between">
+                  {/* Otsikko */}
+                  <h2 className="text-2xl font-semibold font-mono text-gray-800 truncate">
+                    {competition.name}
+                  </h2>
 
-                  <div className="mt-6 md:mt-12">
-                    <button className="rounded-full font-mono w-full border border-solid border-gray-300 transition-colors flex items-center justify-center hover:bg-gray-100 hover:border-green-800 text-sm sm:text-base py-2 px-4">
-                      Katso tiedot →
-                    </button>
+                  {/* Sijainti */}
+                  <p className="font-mono text-base text-gray-600 mb-1 truncate">
+                    {competition.location}
+                  </p>
+                  {/* Alateksti */}
+                  <p className="font-mono text-base text-gray-600 mb-1 truncate">
+                    {formatDate(competition.start_date)} -{" "}
+                    {formatDate(competition.end_date)}
+                  </p>
+
+                  {/* Laji */}
+                  <div className="flex items-center justify-between mt-2">
+                    {/* Laji */}
+                    <span className="text-sm font-mono text-gray-800">
+                      🎳 Keilaus
+                    </span>
                   </div>
                 </div>
               </Link>
             ))
           ) : (
-            <p className="text-gray-200">Ei kilpailuja</p>
+            <p className="text-gray-500">Ei kilpailuja</p>
           )}
         </div>
       </div>
