@@ -92,7 +92,7 @@ export default async function CompetitionsPage() {
               </Link>
             ))
           ) : (
-            <p className="text-gray-500">Ei kilpailuja</p>
+            <p className="text-white">Ei kilpailuja</p>
           )}
         </div>
       </div>
